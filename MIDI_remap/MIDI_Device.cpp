@@ -6,6 +6,8 @@
 int MIDI_Device::instanceCount;
 
 MIDI_Device::MIDI_Device(){
+	DeviceName = L"Generic MIDI device";
+
 	if (this->instanceCount >= 1){
 		throw new std::exception("Device already exists, only one device can exist at a time");
 	}

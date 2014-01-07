@@ -52,7 +52,7 @@ protected:
 	*/
 	virtual int Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE secondByte, DWORD timestamp) = 0;
 
-	const WCHAR * DeviceName = 0; //the name of the device for matching
+	const WCHAR * DeviceName; //the name of the device for matching
 
 	HMIDIIN dev; //system device handle
 

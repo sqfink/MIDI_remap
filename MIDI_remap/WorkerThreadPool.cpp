@@ -35,10 +35,9 @@ WorkerThreadPool::WorkerThreadPool(){
 }
 
 WorkerThreadPool* WorkerThreadPool::getThreadPool(){
-	if (instance)
-		return instance;
-
-	instance = new WorkerThreadPool();
+	if (!instance)
+		instance = new WorkerThreadPool();
+	return instance;
 }
 
 void WorkerThreadPool::destroy(){

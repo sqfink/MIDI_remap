@@ -5,11 +5,6 @@
 #include <chrono>
 #include <condition_variable>
 
-void WorkerThread::_main(){
-
-
-}
-
 /*
 Stores private thread data to prevent threads being included elsewhere
 */
