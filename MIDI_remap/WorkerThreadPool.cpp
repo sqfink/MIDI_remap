@@ -1,10 +1,21 @@
 #include "WorkerThreadPool.h"
 #include <thread>
+#include <mutex>
 
 WorkerThreadPool* WorkerThreadPool::instance = NULL;
 
+/*
+Protects the stdc++11 functions from the global header to allow importing glocal header from managed(or clr) projects
+*/
+struct WorkerThreadPoolPriv {
+	std::mutex processQueueLock;
+	std::mutex sysLock; //protects access to all lists
+};
+
 WorkerThreadPool::WorkerThreadPool(){
-	int hardwareThreads = std::thread::hardware_concurrency();
+	int hardwareThreads = std::thread::hardware_concurrency(); //get the number of parallel threads that can exist on the hardware
+
+	priv = new WorkerThreadPoolPriv; //init the private data struct
 
 	readyThreadCount = 0;
 
@@ -64,22 +75,91 @@ WorkerThreadPool::~WorkerThreadPool(){
 			}
 			thread = NULL;
 		}
+		priv->sysLock.lock(); { //lock for deleting all queues
+			while (readyThreads.size()){ //clear the ready thread list
+				readyThreads.pop();
+			}
 
-		while (readyThreads.size()){ //clear the ready thread list
-			readyThreads.pop();
-		}
-
-		while (busyThreads.size()){ //clear the busy thread list
-			busyThreads.pop();
-		}
+			busyThreads.clear(); //clear the busy thread list
 		
-		allThreads.clear(); //remove all items from thread list
+			allThreads.clear(); //remove all items from thread list
 
-		while (jobQueue.size()){ //remove all jobs from queue
-			jobQueue.pop(); 
-		}
-		
+			while (jobQueue.size()){ //remove all jobs from queue
+				jobQueue.pop(); 
+			}
+		} priv->sysLock.unlock(); //unlock deleting all queues
 	}
 }
 
+void WorkerThreadPool::submitJob(Job* newJob){
+	if(newJob == NULL){
+		throw new std::exception("Cannot start NULL job");
+	}
 
+	priv->sysLock.lock(); { //lock for adding the job to the queue
+		jobQueue.push(newJob); //add the job to the queue
+	}priv->sysLock.unlock(); //unlock adding the job to the queue
+
+	tryProcessQueue();
+}
+
+
+void WorkerThreadPool::tryProcessQueue(){
+	priv->processQueueLock.lock(); //take lock so only one atempt can be made concurrently
+
+	if(jobQueue.size() == 0){
+		priv->processQueueLock.unlock(); //release lock
+		return;					//no jobs to process
+	}
+
+	if(readyThreadCount <= 0){
+		priv->processQueueLock.unlock(); //release lock
+		return;					//no threads are ready to process
+	}
+	
+	int readyCount = readyThreadCount; //copy the number of threads that were ready
+
+	for(int i = 0; i < readyCount; i++){
+		WorkerThread* nextThread = NULL;
+		priv->sysLock.lock();{ //lock access to the ready thread list
+			nextThread = readyThreads.front();
+			readyThreads.pop();
+			readyThreadCount--; //decrement the number of threads in the ready list
+		}priv->sysLock.unlock(); //unlock access to the ready thread list
+
+		if(nextThread == NULL){
+			priv->processQueueLock.unlock(); //release lock
+			throw new std::exception("Got a NULL thread pointer");
+		}
+
+		Job* nextJob = NULL;
+		priv->sysLock.lock();{ //lock for getting the next job in the job queue
+			nextJob = jobQueue.front();
+			jobQueue.pop();
+		}priv->sysLock.unlock(); //unlock getting the next job in the queue
+
+		if(nextJob == NULL){
+			priv->processQueueLock.unlock(); //release lock
+			throw new std::exception("Got a NULL job pointer");
+		}
+
+		nextThread->giveJob(nextJob); //submit the job to the thread
+	}
+
+	priv->processQueueLock.unlock(); //release lock
+	return;
+}
+
+void WorkerThreadPool::_jobCompleted(WorkerThread* thread){
+	priv->sysLock.lock(); { //Lock for adding the thread to the idle thread list
+		busyThreads.remove(thread); //remove from the busy thread list
+		readyThreads.push(thread); //add to the ready thread list
+		readyThreadCount++; //update ready thread counter
+	} priv->sysLock.unlock(); //release lock for adding thread to idle list
+}
+
+void WorkerThreadPool::_jobStarted(WorkerThread* thread){
+	priv->sysLock.lock(); { //Lock for adding the thread to the busy thread list
+		busyThreads.push_back(thread);
+	} priv->sysLock.unlock(); //release lock for adding thread to busy list
+}
