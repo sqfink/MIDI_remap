@@ -26,6 +26,11 @@ public:
 	*/
 	void giveJob(Job*);
 
+	/*
+	Signal the thread to die after the current job completes
+	*/
+	void kill();
+
 private:
 	static void _start(WorkerThread*); //entry point for the thread. starts the main loop
 

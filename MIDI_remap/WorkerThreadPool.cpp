@@ -14,8 +14,8 @@ struct WorkerThreadPoolPriv {
 
 WorkerThreadPool::WorkerThreadPool(){
 	int hardwareThreads = std::thread::hardware_concurrency(); //get the number of parallel threads that can exist on the hardware
-
 	priv = new WorkerThreadPoolPriv; //init the private data struct
+	instance = this;
 
 	readyThreadCount = 0;
 
@@ -28,7 +28,7 @@ WorkerThreadPool::WorkerThreadPool(){
 
 		numThreads = (numThreads < 4) ? 4 : numThreads; //4 threads minimum
 
-		printf("%d hardware threads detected. Creating %d worker threads", hardwareThreads, numThreads);
+		printf("%d hardware threads detected. Creating %d worker threads\n", hardwareThreads, numThreads);
 	}
 
 	for (int i = 0; i < numThreads; i++){
@@ -71,6 +71,7 @@ WorkerThreadPool::~WorkerThreadPool(){
 		*/
 		for (auto thread : allThreads){
 			if (thread){
+				thread->kill();
 				delete thread;
 			}
 			thread = NULL;

@@ -5,6 +5,7 @@
 #include "Windows.h"
 #include "MIDI_Fighter.h"
 #include "MIDI_Device.h"
+#include "WorkerThreadPool.h"
 
 /*
 Start of program
@@ -13,6 +14,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	try{
 		std::vector<WCHAR*> tmp = MIDI_Device::listDevices();
+		WorkerThreadPool * w = WorkerThreadPool::getThreadPool();
 		if (tmp.size() == 0){
 			printf("No MIDI devices detected\n");
 		}
@@ -25,6 +27,8 @@ int _tmain(int argc, _TCHAR* argv[])
 					printf("\tItem was NULL\n");
 			}
 		}
+		system("PAUSE");
+		w->destroy();
 	}
 	catch (std::exception * e){
 		if (e == NULL){
