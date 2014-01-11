@@ -6,6 +6,7 @@
 #include "MIDI_Fighter.h"
 #include "MIDI_Device.h"
 #include "WorkerThreadPool.h"
+#include "LogServer.h"
 
 /*
 Start of program
@@ -14,6 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	try{
 		std::vector<WCHAR*> tmp = MIDI_Device::listDevices();
+		Log.setLogFile("log.csv");
 		WorkerThreadPool * w = WorkerThreadPool::getThreadPool();
 		if (tmp.size() == 0){
 			printf("No MIDI devices detected\n");

@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite", "sqlite\sqlite.vcxproj", "{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MIDI_remap", "MIDI_remap\MIDI_remap.vcxproj", "{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MIDIFighter", "MIDIFighter\MIDIFighter.vcxproj", "{8DC51DFF-A392-4121-9D33-622C91E2BE5D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeviceDLL", "DeviceDLL\DeviceDLL.vcxproj", "{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loging", "Loging\Loging.vcxproj", "{C9FD31C1-77C2-4114-8880-30A805F8D933}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,18 +18,30 @@ Global
 		win8.1|Win32 = win8.1|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}.Debug|Win32.ActiveCfg = Debug|Win32
-		{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}.Debug|Win32.Build.0 = Debug|Win32
-		{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}.Release|Win32.ActiveCfg = Release|Win32
-		{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}.Release|Win32.Build.0 = Release|Win32
-		{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}.win8.1|Win32.ActiveCfg = win8.1|Win32
-		{21405980-11BC-4A1B-9DA7-3B7BFE10BD01}.win8.1|Win32.Build.0 = win8.1|Win32
 		{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}.Debug|Win32.Build.0 = Debug|Win32
 		{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}.Release|Win32.ActiveCfg = Release|Win32
 		{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}.Release|Win32.Build.0 = Release|Win32
 		{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}.win8.1|Win32.ActiveCfg = win8.1|Win32
 		{24DD84B2-00E5-478B-A94C-09B5B6CBEE5D}.win8.1|Win32.Build.0 = win8.1|Win32
+		{8DC51DFF-A392-4121-9D33-622C91E2BE5D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DC51DFF-A392-4121-9D33-622C91E2BE5D}.Debug|Win32.Build.0 = Debug|Win32
+		{8DC51DFF-A392-4121-9D33-622C91E2BE5D}.Release|Win32.ActiveCfg = Release|Win32
+		{8DC51DFF-A392-4121-9D33-622C91E2BE5D}.Release|Win32.Build.0 = Release|Win32
+		{8DC51DFF-A392-4121-9D33-622C91E2BE5D}.win8.1|Win32.ActiveCfg = Release|Win32
+		{8DC51DFF-A392-4121-9D33-622C91E2BE5D}.win8.1|Win32.Build.0 = Release|Win32
+		{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}.Debug|Win32.Build.0 = Debug|Win32
+		{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}.Release|Win32.ActiveCfg = Release|Win32
+		{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}.Release|Win32.Build.0 = Release|Win32
+		{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}.win8.1|Win32.ActiveCfg = Release|Win32
+		{CAD0DB93-7F44-4FE2-BDC9-3C96F36AA95E}.win8.1|Win32.Build.0 = Release|Win32
+		{C9FD31C1-77C2-4114-8880-30A805F8D933}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C9FD31C1-77C2-4114-8880-30A805F8D933}.Debug|Win32.Build.0 = Debug|Win32
+		{C9FD31C1-77C2-4114-8880-30A805F8D933}.Release|Win32.ActiveCfg = Release|Win32
+		{C9FD31C1-77C2-4114-8880-30A805F8D933}.Release|Win32.Build.0 = Release|Win32
+		{C9FD31C1-77C2-4114-8880-30A805F8D933}.win8.1|Win32.ActiveCfg = Release|Win32
+		{C9FD31C1-77C2-4114-8880-30A805F8D933}.win8.1|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@
 
 MIDI_Fighter::MIDI_Fighter(){
 	this->DeviceName = L"Midifighter Spectra"; //device name string
+	selected_bank = 0; //default to bank 0 unitl changed
 }
 
 int MIDI_Fighter::Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE secondByte, DWORD timestamp){

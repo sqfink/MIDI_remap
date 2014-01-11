@@ -28,6 +28,9 @@
     <ClCompile Include="WorkerThreadPool.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Action.h">
@@ -58,6 +61,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Action_key.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigLoader.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

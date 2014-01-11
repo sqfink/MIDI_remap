@@ -4,6 +4,9 @@
 #include <mutex>
 #include <chrono>
 #include <condition_variable>
+#include "LogServer.h"
+
+LogServer Log; //for the extern
 
 /*
 Stores private thread data to prevent threads being included elsewhere
@@ -13,11 +16,11 @@ struct WorkerThreadPrivateData{
 
 	std::condition_variable_any cv; //for signaling job to run processing
 
-	std::mutex mtx; 
+	std::mutex * mtx; 
 
 	std::thread * worker; //the thread pointer
 
-	Job* currentJob; //the job to execute
+	Job * currentJob; //the job to execute
 
 	WorkerThreadPool * pool; //Link to the owning pool
 };
@@ -28,13 +31,25 @@ WorkerThread::WorkerThread()
 	priv = new WorkerThreadPrivateData(); //initialize hidden vars
 
 	priv->worker = NULL;
+	priv->mtx = NULL;
+
+	priv->currentJob = NULL;
+	priv->die = false;
+	priv->pool = NULL;
+
+	priv->pool = WorkerThreadPool::getThreadPool();
+	if (priv->pool == NULL){
+		throw new std::exception("Error getting handle to the thread pool");
+	}
+
+	priv->mtx = new std::mutex();
+	if (priv->mtx == NULL)
+		throw new std::exception("Error allocating mutex");
 
 	priv->worker = new std::thread(_start, this); //create the thread
 	if (priv->worker == NULL){ //make sure is started
 		throw new std::exception("Error creating worker thread");
 	}
-
-	printf("Worker thread %d created\n", priv->worker->get_id());
 }
 
 
@@ -51,17 +66,18 @@ WorkerThread::~WorkerThread()
 }
 
 void WorkerThread::_start(WorkerThread* ptr){
-
 	if (ptr == NULL){
 		throw new std::exception("Thread cannot be started without a self refrence");
 	}
 	ptr->priv->die = false;
 	ptr->priv->currentJob = NULL;
-
+	
 	ptr->main(); //do the main loop
+
 }
 
 void WorkerThread::main(){
+	LOG(INFO, "WorkerThreads", "Worker thread %d created", std::this_thread::get_id());
 	while (! priv->die){
 		if (priv->currentJob){
 			priv->currentJob->execute();
@@ -69,14 +85,14 @@ void WorkerThread::main(){
 			priv->pool->_jobCompleted(this); //signal that job was completed
 		}
 		else{
-			priv->mtx.try_lock();
-			priv->cv.wait_for(priv->mtx,std::chrono::milliseconds(250)); //every 1/4 sec check die condition TODO: should this be shorter?
+			priv->mtx->try_lock();
+			priv->cv.wait_for(*priv->mtx,std::chrono::milliseconds(250)); //every 1/4 sec check die condition TODO: should this be shorter?
 		}
 	}
 	if (priv) //prevent deleting the mutex while it is locked
-		priv->mtx.unlock();
+		priv->mtx->unlock();
 
-	printf("Thread %d terminated\n", std::this_thread::get_id()); //thread is now dead
+	LOG(INFO, "WorkerThreads", "Worker thread %d ended", std::this_thread::get_id());
 }
 
 void WorkerThread::giveJob(Job* newJob){
@@ -99,7 +115,8 @@ void WorkerThread::giveJob(Job* newJob){
 
 void WorkerThread::kill(){ 
 	priv->die = true; //flag the thread to die next cycle
-	priv->worker->join(); //wait for the thread to die
+	if (priv->worker->joinable())
+		priv->worker->join(); //wait for the thread to die
 	delete priv->worker; //free the mem
 	priv->worker = NULL; //delete refrence
 }
