@@ -17,9 +17,11 @@ Job::~Job() {
 }
 
 void Job::execute(){
-	for (auto act : actions){
-		if (act)
-			act->doAction();
+	if(actionCount){
+		for (auto act : actions){
+			if (act)
+				act->doAction();
+		}
 	}
 }
 

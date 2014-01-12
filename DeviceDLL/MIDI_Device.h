@@ -59,6 +59,11 @@ public:
 protected:
 
 	/*
+	Loads the config for the device and populates the jobs sent by the device
+	*/
+	virtual void loadConfig() = 0; 
+
+	/*
 	Device specific implementation of midi information handling
 	*/
 	virtual int Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE secondByte, DWORD timestamp) = 0;

@@ -3,13 +3,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Action_key.h"
+#include "iDeviceDLL.h"
 
+#define DEV_NAME  L"Midi Fighter Spectra"
 
 //const wchar_t * MIDI_Fighter::DeviceName =  L"Midifighter Spectra";
 
+const wchar_t * __stdcall getDeviceName(){
+	return DEV_NAME;
+}
+
+MIDI_Device * __stdcall getNewDeviceHandle(){
+	return new MIDI_Fighter();
+}
+
+void MIDI_Fighter::loadConfig(){
+
+}
 
 MIDI_Fighter::MIDI_Fighter(){
-	this->DeviceName = L"Midi Fighter Spectra"; //device name string
+	this->DeviceName = DEV_NAME; //device name string
 	selected_bank = 0; //default to bank 0 unitl changed
 	banks[0].btn[0] = new Job();
 	banks[0].btn[0]->addAction(new Action_key('A', true));
@@ -32,3 +45,5 @@ int MIDI_Fighter::Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE
 	}
 	return 0;
 }
+
+

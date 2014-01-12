@@ -16,6 +16,9 @@ public:
 	MIDI_Fighter();
 
 protected:
+
+	void loadConfig();
+
 	/*
 	Device specific implementation of midi information handling
 	*/

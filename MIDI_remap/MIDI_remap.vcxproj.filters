@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Action_key.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="Job.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="MIDI_Device.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="MIDI_Fighter.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="MIDI_Launchpad.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -22,29 +10,8 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="WorkerThread.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="WorkerThreadPool.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="ConfigLoader.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Action.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Job.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="MIDI_Device.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="MIDI_Fighter.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="MIDI_Launchpad.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -54,21 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="WorkerThread.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="WorkerThreadPool.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Action_key.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ConfigLoader.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

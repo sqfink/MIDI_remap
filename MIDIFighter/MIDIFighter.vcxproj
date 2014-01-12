@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\Threads\;$(SolutionDir)\DeviceDLL\;$(SolutionDir)\Loging\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -79,6 +80,15 @@
     <ProjectReference Include="..\DeviceDLL\DeviceDLL.vcxproj">
       <Project>{cad0db93-7f44-4fe2-bdc9-3c96f36aa95e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MIDI_Fighter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MIDI_Fighter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\MIDI_remap\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
