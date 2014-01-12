@@ -248,6 +248,7 @@ std::vector<WCHAR*> MIDI_Device::listDevices(){
 
 	MIDIINCAPS caps; //MIDI device capabilites structure
 
+
 	while (enumeratedDevices < getDeviceCount()){ //while we have not enumerated all devices
 		for (int i = lastDeviceID; i < INT_MAX; i++){ //incrementally check all device ids after the last valid one
 
@@ -275,10 +276,14 @@ std::vector<WCHAR*> MIDI_Device::listDevices(){
 				}
 			}
 
+			wchar_t * name = (wchar_t*) calloc(32, sizeof(wchar_t));
+			lstrcpyW(name, caps.szPname);
+
 			//the device was valid, add it to the list
-			tmp.push_back(caps.szPname);
+			tmp.push_back(name);
 
 			lastDeviceID = i; //update last device ID
+			break;
 		}
 		enumeratedDevices++; //increment device count
 	}
