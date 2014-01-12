@@ -2,10 +2,18 @@
 #include "WorkerThreadPool.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "Action_key.h"
+
+
+//const wchar_t * MIDI_Fighter::DeviceName =  L"Midifighter Spectra";
+
 
 MIDI_Fighter::MIDI_Fighter(){
-	this->DeviceName = L"Midifighter Spectra"; //device name string
+	this->DeviceName = L"Midi Fighter Spectra"; //device name string
 	selected_bank = 0; //default to bank 0 unitl changed
+	banks[0].btn[0] = new Job();
+	banks[0].btn[0]->addAction(new Action_key('A', true));
+	banks[0].btn[0]->addAction(new Action_key('A', false));
 }
 
 int MIDI_Fighter::Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE secondByte, DWORD timestamp){

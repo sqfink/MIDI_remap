@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <exception>
+#include "LogServer.h"
 
 Action_key::Action_key(int vk, bool state) {
 	this->vk = vk;
@@ -36,6 +37,8 @@ void Action_key::doAction(){
 	tmp.type = INPUT_KEYBOARD;
 
 	SendInput(1, &tmp, sizeof(INPUT));
+
+	LOG(DEBUG, "Action Key", "Key:%d state:%d",  tmp.ki.wVk,  state ? 0 : KEYEVENTF_KEYUP);
 }
 
 Action_key::~Action_key()

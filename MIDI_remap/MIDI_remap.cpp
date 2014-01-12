@@ -14,9 +14,10 @@ Start of program
 int _tmain(int argc, _TCHAR* argv[])
 {
 	try{
-		std::vector<WCHAR*> tmp = MIDI_Device::listDevices();
-		Log.setLogFile("log.csv");
+		Log.setLogFile(stdout);
 		WorkerThreadPool * w = WorkerThreadPool::getThreadPool();
+		std::vector<WCHAR*> tmp = MIDI_Device::listDevices();
+		MIDI_Device * dev = new MIDI_Fighter();
 		if (tmp.size() == 0){
 			printf("No MIDI devices detected\n");
 		}
@@ -28,8 +29,14 @@ int _tmain(int argc, _TCHAR* argv[])
 				else
 					printf("\tItem was NULL\n");
 			}
+			if(MIDI_Device::getDeviceIdByName(MIDI_Fighter::getName()) != -1){ //check if the device is present
+				dev->connect();
+				dev->start();
+			}
 		}
 		system("PAUSE");
+		dev->stop();
+		dev->disconnect();
 		w->destroy();
 	}
 	catch (std::exception * e){

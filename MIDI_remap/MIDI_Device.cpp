@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <exception>
 #include <errno.h>
+#include "LogServer.h"
 
 int MIDI_Device::instanceCount;
 
-MIDI_Device::MIDI_Device(){
-	DeviceName = L"Generic MIDI device";
+const wchar_t * MIDI_Device::DeviceName = L"Generic MIDI device";
 
+MIDI_Device::MIDI_Device(){
 	if (this->instanceCount >= 1){
 		throw new std::exception("Device already exists, only one device can exist at a time");
 	}
@@ -24,24 +25,24 @@ MIDI_Device::~MIDI_Device(){
 }
 
 int MIDI_Device::connect(){
-	printf("Opening connection to %ls...\t", DeviceName);
+	LOG(INFO,"MIDI Device","Opening connection to %ls...\t", DeviceName);
 
 	if (getDeviceCount() == 0){
-		printf("[FAILED]\tNo MIDI devices connected\n");
+		LOG(INFO,"MIDI Device", "[FAILED]\tNo MIDI devices connected\n");
 		return ENODEV;
 	}
 	
 	int devID = getDeviceIdByName(DeviceName);
 
 	if (devID == -1){
-		printf("[FAILED]\tDevice not connected");
+		LOG(INFO,"MIDI Device", "[FAILED]\tDevice not connected");
 		return ENODEV;
 	}
 
 	MMRESULT retVal = midiInOpen(&dev, devID, (DWORD_PTR)preprocessMIDI, (DWORD_PTR) this, CALLBACK_FUNCTION | MIDI_IO_STATUS);
 
 	if (retVal != MMSYSERR_NOERROR){
-		printf("[FAILED]\t");
+		LOG(INFO,"MIDI Device", "[FAILED]\t");
 		switch (retVal){
 		case MMSYSERR_ALLOCATED:
 			printf("MMSYSERR_ALLOCATED\n");
@@ -64,7 +65,7 @@ int MIDI_Device::connect(){
 		}
 	}
 
-	printf("[  OK  ]\n");
+	LOG(INFO,"MIDI Device", "[  OK  ]\n");
 	
 	connected = true;
 
@@ -72,11 +73,11 @@ int MIDI_Device::connect(){
 }
 
 void MIDI_Device::start(){
-	printf("Starting MIDI processing for %ls...\t", DeviceName);
+	LOG(INFO,"MIDI Device", "Starting MIDI processing for %ls...\t", DeviceName);
 
 	if (!connected){
 		started = false;
-		printf("[FAILED]\tConnection not oppened\n");
+		LOG(INFO,"MIDI Device", "[FAILED]\tConnection not oppened\n");
 		throw new std::exception("Connection not oppened\n");
 	}
 
@@ -99,22 +100,22 @@ void MIDI_Device::start(){
 }
 
 void MIDI_Device::stop(){
-	printf("Stoping MIDI processing for %ls...\t", DeviceName);
+	LOG(INFO,"MIDI Device", "Stoping MIDI processing for %ls...\t", DeviceName);
 
 	if (!connected){
 		started = false;
-		printf("[FAILED]\tConnection not oppened\n");
+		LOG(INFO,"MIDI Device", "[FAILED]\tConnection not oppened\n");
 		throw new std::exception("Connection not oppened\n");
 	}
 
 	if (!started){
-		printf("[  OK  ]\n");
+		LOG(INFO,"MIDI Device", "[  OK  ]\n");
 		return;
 	}
 
 	MMRESULT retVal = midiInStop(dev);
 	if (retVal != MMSYSERR_NOERROR){
-		printf("[FAILED]\t");
+		LOG(INFO,"MIDI Device", "[FAILED]\t");
 		switch (retVal){
 		case MMSYSERR_INVALHANDLE:
 			printf("MMSYSERR_INVALHANDLE\n");
@@ -126,7 +127,7 @@ void MIDI_Device::stop(){
 	}
 
 	started = false;
-	printf("[  OK  ]\n");
+	LOG(INFO,"MIDI Device", "[  OK  ]\n");
 }
 
 
@@ -135,16 +136,16 @@ int MIDI_Device::disconnect(){
 		stop();
 	}
 
-	printf("Closing connection to %ls...\t", DeviceName);
+	LOG(INFO,"MIDI Device", "Closing connection to %ls...\t", DeviceName);
 
 	if (!connected){
-		printf("[  OK  ]\n");
+		LOG(INFO,"MIDI Device", "[  OK  ]\n");
 		return ERROR_SUCCESS;
 	}
 
 	MMRESULT retVal = midiInClose(dev);
 	if (retVal != MMSYSERR_NOERROR){
-		printf("[FAILED]\t");
+		LOG(INFO,"MIDI Device", "[FAILED]\t");
 		switch (retVal){
 		case MIDIERR_STILLPLAYING:
 			printf("MIDIERR_STILLPLAYING\n");
@@ -161,7 +162,7 @@ int MIDI_Device::disconnect(){
 		}
 	}
 	connected = false;
-	printf("[  OK  ]\n");
+	LOG(INFO,"MIDI Device", "[  OK  ]\n");
 	return ERROR_SUCCESS;
 }
 
@@ -171,7 +172,7 @@ int MIDI_Device::getDeviceCount(){
 
 int MIDI_Device::getDeviceIdByName(const WCHAR * name){
 	if (name == NULL || wcslen(name) == 0){
-		printf("Device name cannot be NULL");
+		LOG(INFO,"MIDI Device","Device name cannot be NULL");
 		return -1;
 	}
 	int enumeratedDevices = 0;
@@ -288,4 +289,8 @@ std::vector<WCHAR*> MIDI_Device::listDevices(){
 		enumeratedDevices++; //increment device count
 	}
 	return tmp;
+}
+
+const wchar_t * MIDI_Device::getName(){
+	return DeviceName;
 }

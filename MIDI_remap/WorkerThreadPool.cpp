@@ -13,6 +13,7 @@ struct WorkerThreadPoolPriv {
 };
 
 WorkerThreadPool::WorkerThreadPool(){
+	pendingJobs = 0;
 	int hardwareThreads = std::thread::hardware_concurrency(); //get the number of parallel threads that can exist on the hardware
 	priv = new WorkerThreadPoolPriv; //init the private data struct
 	instance = this;
@@ -40,7 +41,8 @@ WorkerThreadPool::WorkerThreadPool(){
 		}
 
 		allThreads.push_back(tmp); //add it to the thread list
-
+		readyThreads.push(tmp); //default to being a ready thread
+		readyThreadCount++;
 		tmp = NULL;
 	}
 }
@@ -99,6 +101,7 @@ void WorkerThreadPool::submitJob(Job* newJob){
 
 	priv->sysLock.lock(); { //lock for adding the job to the queue
 		jobQueue.push(newJob); //add the job to the queue
+		pendingJobs++;
 	}priv->sysLock.unlock(); //unlock adding the job to the queue
 
 	tryProcessQueue();
@@ -120,7 +123,7 @@ void WorkerThreadPool::tryProcessQueue(){
 	
 	int readyCount = readyThreadCount; //copy the number of threads that were ready
 
-	for(int i = 0; i < readyCount; i++){
+	for(int i = 0; i < readyCount && pendingJobs; i++){
 		WorkerThread* nextThread = NULL;
 		priv->sysLock.lock();{ //lock access to the ready thread list
 			nextThread = readyThreads.front();
@@ -135,16 +138,18 @@ void WorkerThreadPool::tryProcessQueue(){
 
 		Job* nextJob = NULL;
 		priv->sysLock.lock();{ //lock for getting the next job in the job queue
-			nextJob = jobQueue.front();
-			jobQueue.pop();
+			if(pendingJobs){
+				nextJob = jobQueue.front();
+				jobQueue.pop();
+				pendingJobs--;
+			}
 		}priv->sysLock.unlock(); //unlock getting the next job in the queue
 
 		if(nextJob == NULL){
 			priv->processQueueLock.unlock(); //release lock
-			throw new std::exception("Got a NULL job pointer");
+		}else{
+			nextThread->giveJob(nextJob); //submit the job to the thread
 		}
-
-		nextThread->giveJob(nextJob); //submit the job to the thread
 	}
 
 	priv->processQueueLock.unlock(); //release lock

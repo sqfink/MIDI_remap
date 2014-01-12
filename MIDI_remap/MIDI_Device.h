@@ -10,6 +10,12 @@ Base type for MIDI control devices
 class MIDI_Device
 {
 public:
+
+	/*
+	Gets the device name string
+	*/
+	static const wchar_t * getName();
+
 	/*
 	Gets the list of connected MIDI device names
 	*/
@@ -45,6 +51,11 @@ public:
 	*/
 	void stop();
 
+	/*
+	Gets the system device id number for the MIDI device
+	*/
+	static int getDeviceIdByName(const WCHAR * name);
+
 protected:
 
 	/*
@@ -52,14 +63,9 @@ protected:
 	*/
 	virtual int Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE secondByte, DWORD timestamp) = 0;
 
-	const WCHAR * DeviceName; //the name of the device for matching
+	static const WCHAR * DeviceName; //the name of the device for matching
 
 	HMIDIIN dev; //system device handle
-
-	/*
-	Gets the system device id number for the MIDI device
-	*/
-	static int getDeviceIdByName(const WCHAR * name);
 
 	/*
 	Gets the number of connected MIDI devices

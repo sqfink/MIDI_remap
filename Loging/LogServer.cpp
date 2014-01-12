@@ -136,6 +136,8 @@ void LogServer::main(){
 			LogMessage * message = NULL;
 
 			priv->logQueueLock.lock(); //lock the message queue
+			if(!priv->logQueue.size())
+				continue;
 			message = priv->logQueue.front(); //get the next message in the queue
 			priv->logQueue.pop_front(); //remove the message from the queue
 			priv->queuedMessages--; //decrease pending message count
@@ -162,8 +164,8 @@ void LogServer::main(){
 		}
 		else{
 			fflush(fd); //not busy so flush the file
-			priv->mtx.try_lock(); //wait for the event
-			priv->cv.wait_for(priv->mtx, std::chrono::milliseconds(250)); //every 1/4 sec check die condition TODO: should this be shorter?
+			if(priv->mtx.try_lock()) //wait for the event
+				priv->cv.wait_for(priv->mtx, std::chrono::milliseconds(250)); //every 1/4 sec check die condition TODO: should this be shorter?
 		}
 	}
 	fclose(fd); //close the file
@@ -173,6 +175,7 @@ void LogServer::main(){
 
 void LogServer::write(LogLevels severity, const char * alias, const char * timestamp, const char * file, const char * function, int line, const char* format, ...){
 	if (!priv->logThread){ //if the thread is not running start it
+		priv->queuedMessages = 0;
 		priv->logThread = new std::thread(_start, this); //start the thread
 		if (priv->logThread == NULL){ //make sure is started
 			throw new std::exception("Error creating log thread");

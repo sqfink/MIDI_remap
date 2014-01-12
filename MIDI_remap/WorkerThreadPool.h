@@ -48,6 +48,8 @@ private:
 
 	volatile int readyThreadCount; //the number of threads that are ready for a job
 
+	volatile int pendingJobs; //the number of jobs that are in queue
+
 	std::queue<Job*> jobQueue; //queue of jobs to be executed
 
 	std::vector<WorkerThread*> allThreads; //running threads that are busy
