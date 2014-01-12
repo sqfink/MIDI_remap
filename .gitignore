@@ -152,3 +152,5 @@ $RECYCLE.BIN/
 *.tlog
 sqlite/win8.1/
 win8.1/
+
+*.csv
