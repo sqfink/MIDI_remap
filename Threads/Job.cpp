@@ -1,5 +1,5 @@
 #include "Job.h"
-
+#include "LogServer.h"
 
 Job::Job(){ 
 	actionCount = 0;
@@ -17,6 +17,7 @@ Job::~Job() {
 }
 
 void Job::execute(){
+	LOG(DEBUG, "Job", "Executing job with %d actions", actionCount);
 	if(actionCount){
 		for (auto act : actions){
 			if (act)

@@ -1,6 +1,7 @@
 #include "WorkerThreadPool.h"
 #include <thread>
 #include <mutex>
+#include "LogServer.h"
 
 WorkerThreadPool* WorkerThreadPool::instance = NULL;
 
@@ -22,14 +23,14 @@ WorkerThreadPool::WorkerThreadPool(){
 
 	if (hardwareThreads == 0){
 		numThreads = 4;
-		printf("Failed to detect number of hardware threads. Using %d worker threads.\n", numThreads);
+		LOG(WARN, "ThreadPool", "Failed to detect number of hardware threads. Using %d worker threads.", numThreads);
 	}
 	else{
-		numThreads = (int)ceil((double)hardwareThreads * 1.5); //1.5 * number of hardware threads rounded up
+		numThreads = (int)ceil((double)hardwareThreads * 0.75); //0.75 * number of hardware threads rounded up
 
 		numThreads = (numThreads < 4) ? 4 : numThreads; //4 threads minimum
 
-		printf("%d hardware threads detected. Creating %d worker threads\n", hardwareThreads, numThreads);
+		LOG(FINE, "ThreadPool", "%d hardware threads detected. Creating %d worker threads", hardwareThreads, numThreads);
 	}
 
 	for (int i = 0; i < numThreads; i++){
@@ -148,6 +149,7 @@ void WorkerThreadPool::tryProcessQueue(){
 		if(nextJob == NULL){
 			priv->processQueueLock.unlock(); //release lock
 		}else{
+			LOG(DEBUG, "ThreadPool", "Submitting job to worker thread");
 			nextThread->giveJob(nextJob); //submit the job to the thread
 		}
 	}
@@ -157,6 +159,7 @@ void WorkerThreadPool::tryProcessQueue(){
 }
 
 void WorkerThreadPool::_jobCompleted(WorkerThread* thread){
+	LOG(DEBUG, "WorkerPool", "Worker thread has completed job");
 	priv->sysLock.lock(); { //Lock for adding the thread to the idle thread list
 		busyThreads.remove(thread); //remove from the busy thread list
 		readyThreads.push(thread); //add to the ready thread list

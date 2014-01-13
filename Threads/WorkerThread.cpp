@@ -55,6 +55,7 @@ WorkerThread::WorkerThread()
 
 WorkerThread::~WorkerThread()
 {
+	LOG(DEBUG, "WorkerThreads", "Deleting worker thread");
 	if (priv){ //if we are initialized
 		if (priv->worker){ //make sure the thread is not still active
 			throw new std::exception("Thread must be killed before it is delted");
@@ -77,22 +78,24 @@ void WorkerThread::_start(WorkerThread* ptr){
 }
 
 void WorkerThread::main(){
-	LOG(INFO, "WorkerThreads", "Worker thread %d created", std::this_thread::get_id());
+	LOG(DEBUG, "WorkerThreads", "Worker thread %d created", std::this_thread::get_id());
 	while (! priv->die){
 		if (priv->currentJob){
+			LOG(DEBUG, "WorkerThreads", "Worker %d running job", priv->worker->get_id());
 			priv->currentJob->execute();
 			priv->currentJob = NULL;
 			priv->pool->_jobCompleted(this); //signal that job was completed
+			LOG(DEBUG, "WorkerThreads", "Worker %d completed job", priv->worker->get_id());
 		}
 		else{
 			priv->mtx->try_lock();
-			priv->cv.wait_for(*priv->mtx,std::chrono::milliseconds(250)); //every 1/4 sec check die condition TODO: should this be shorter?
+			priv->cv.wait_for(*priv->mtx,std::chrono::milliseconds(100)); //every 1/10 sec check die condition TODO: should this be shorter?
 		}
 	}
 	if (priv) //prevent deleting the mutex while it is locked
 		priv->mtx->unlock();
 
-	LOG(INFO, "WorkerThreads", "Worker thread %d ended", std::this_thread::get_id());
+	LOG(DEBUG, "WorkerThreads", "Worker thread %d ended", std::this_thread::get_id());
 }
 
 void WorkerThread::giveJob(Job* newJob){
@@ -104,16 +107,17 @@ void WorkerThread::giveJob(Job* newJob){
 			return;
 		}
 	}
-	
+	LOG(DEBUG, "WorkerThreads", "Recieved job");
 	if (priv->currentJob) //protect from job overwrite
 		throw new std::exception("Thread busy");
 
 	priv->currentJob = newJob; //set the job 
-
+	priv->pool->_jobStarted(this); //signal to thread pool that this thread is now busy
 	priv->cv.notify_all(); //trigger event in worker thread
 }
 
 void WorkerThread::kill(){ 
+	LOG(DEBUG, "WorkerThreads", "Killing thread");
 	priv->die = true; //flag the thread to die next cycle
 	if (priv->worker->joinable())
 		priv->worker->join(); //wait for the thread to die

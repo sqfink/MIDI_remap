@@ -55,6 +55,19 @@ public:
 	*/
 	static LogServer* getLogHandle();
 
+	/*Messages with greater logging level index than this will be ignored*/
+	static void setLogLevel(LogLevels level);
+
+	/*
+	Sets wheter or not messages with an INFO severity will be printed to stdout
+	*/
+	static void showInfoLogsInStdout(bool state);
+
+	/*
+	Sets whether or not to print WARN,ERR,CRITICAL messages to stderr
+	*/
+	static void showErrInStderr(bool state);
+
 	/*
 	Writes the line of text to the log at the specified severity
 	Functions as printf
@@ -83,6 +96,12 @@ public:
 	void setLogFile(FILE* fd); 
 
 private:
+
+	bool logInfoToStdout; //flag for if it should print to stdout
+
+	bool logErrToStderr; //flag for if it should print to stderr
+
+	LogLevels logSeverity; //the minimum severity to print
 
 	struct LogServerPrivateData * priv; //Hides the stuff that would break CLR from the public header
 

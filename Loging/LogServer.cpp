@@ -15,6 +15,28 @@ At runtime start default to not running
 bool LogServer::alreadyExists = false;
 
 /*
+Gets a printf friendly string from a LogLevels flag
+*/
+const char * severityToString(LogLevels severity){
+	switch(severity){
+	case CRITICAL:
+		return "CRITICAL";
+	case ERR:
+		return "Error";
+	case WARN:
+		return "Warning";
+	case INFO:
+		return "Info";
+	case FINE:
+		return "Fine";
+	case DEBUG:
+		return "Debug";
+	default:
+		return "Unknown severity";
+	}
+}
+
+/*
 Contains all data to be printed by the log thread
 */
 struct LogMessage{
@@ -68,7 +90,13 @@ LogServer::LogServer() {
 
 	alreadyExists = true; //flag to not allow any more intializations
 
-	fd = stdout;
+	fd = fopen("log.csv", "a+");
+
+	logSeverity = INFO;
+
+	logErrToStderr = false;
+
+	logInfoToStdout = false;
 }
 
 void LogServer::setLogFile(FILE* fd){
@@ -164,13 +192,21 @@ void LogServer::main(){
 				message->line,
 				message->message);
 
+			if(message->severity == INFO && logInfoToStdout && fd != stdout && fd != stderr){
+				fprintf(stdout, "[%s:%s] %s\n", message->alias, severityToString(message->severity), message->message);
+			}
+
+			if(message->severity <= WARN && logErrToStderr && fd != stdout && fd != stderr){
+				fprintf(stderr, "[%s:%s] %s\n", message->alias, severityToString(message->severity), message->message);
+			}
+
 			//free(timeval); //free the time string //FIXME: should this really not be freed?
 			timeval = NULL; //remove the refrence
 		}
 		else{
 			fflush(fd); //not busy so flush the file
 			if(priv->mtx.try_lock()) //wait for the event
-				priv->cv.wait_for(priv->mtx, std::chrono::milliseconds(250)); //every 1/4 sec check die condition TODO: should this be shorter?
+				priv->cv.wait_for(priv->mtx, std::chrono::milliseconds(100)); //every 1/10 sec check die condition TODO: should this be shorter?
 		}
 	}
 	fclose(fd); //close the file
@@ -185,8 +221,10 @@ void LogServer::write(LogLevels severity, const char * alias, const char * times
 		if (priv->logThread == NULL){ //make sure is started
 			throw new std::exception("Error creating log thread");
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(250));  //sleep for 1/4 sec before proceeding to allow thread to get set up
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));  //sleep for 1/10 sec before proceeding to allow thread to get set up
 	}
+	if(severity > logSeverity)
+		return;
 
 	LogMessage * mes = NULL;
 	mes = new LogMessage(); //create a message
@@ -216,3 +254,14 @@ void LogServer::write(LogLevels severity, const char * alias, const char * times
 	priv->cv.notify_one(); //proc the event on the thread
 }
 
+void LogServer::setLogLevel(LogLevels severity){
+	Log.logSeverity = severity;
+}
+
+void LogServer::showInfoLogsInStdout(bool state){
+	Log.logInfoToStdout = state;
+}
+
+void LogServer::showErrInStderr(bool state){
+	Log.logErrToStderr = state;
+}
