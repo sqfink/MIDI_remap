@@ -92,8 +92,13 @@ LogServer::~LogServer() {
 
 	if (priv){
 		priv->die = true; //signal thread to die
-		priv->logThread->join(); //wait for it to die
-		delete priv->logThread; //free the mem
+		if (priv->logThread){
+			if (priv->logThread->joinable())
+				priv->logThread->join(); //wait for it to die
+			delete priv->logThread; //free the mem
+		}
+		priv->logThread = NULL;
+		
 		if (priv->queuedMessages){ //if there are messages
 			for (auto m : priv->logQueue){ //foreach message
 				if (!m) //message was null

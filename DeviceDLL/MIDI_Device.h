@@ -10,6 +10,16 @@ Base type for MIDI control devices
 class MIDI_Device
 {
 public:
+	/*
+	Gets the singleton of the object
+	Returns NULL if the object has not yet been created
+	*/
+	static MIDI_Device * getInstance();
+
+	/*
+	Calls destructor for the singleton
+	*/
+	static void destroyInstance();
 
 	/*
 	Gets the device name string
@@ -20,16 +30,6 @@ public:
 	Gets the list of connected MIDI device names
 	*/
 	static std::vector<WCHAR*> listDevices();
-
-	/*
-	Called on instance creation
-	*/
-	MIDI_Device();
-
-	/*
-	Called on instance deletion
-	*/
-	~MIDI_Device();
 
 	/*
 	Connects to the device
@@ -56,7 +56,19 @@ public:
 	*/
 	static int getDeviceIdByName(const WCHAR * name);
 
+	/*
+	Called on instance creation
+	Fails if the device is already open. get instance should be used instead
+	*/
+	MIDI_Device();
+
+	/*
+	Called on instance deletion
+	*/
+	~MIDI_Device();
+
 protected:
+
 
 	/*
 	Loads the config for the device and populates the jobs sent by the device
@@ -76,6 +88,8 @@ protected:
 	Gets the number of connected MIDI devices
 	*/
 	static int getDeviceCount();
+
+	static MIDI_Device * refrence; // singleton refrence to the device pointer
 
 private:
 

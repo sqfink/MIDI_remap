@@ -1,5 +1,5 @@
 #pragma once
-#include "MIDI_Device.h"
+#include "iDeviceDLL.h"
 #include <Windows.h>
 #include "Job.h"
 
@@ -13,6 +13,7 @@ Representation of the MIDI fighter spectra controller
 */
 class MIDI_Fighter : public MIDI_Device {
 public:
+
 	MIDI_Fighter();
 
 protected:

@@ -8,6 +8,8 @@ int MIDI_Device::instanceCount;
 
 const wchar_t * MIDI_Device::DeviceName = L"Generic MIDI device";
 
+MIDI_Device * MIDI_Device::refrence;
+
 MIDI_Device::MIDI_Device(){
 	if (this->instanceCount >= 1){
 		throw new std::exception("Device already exists, only one device can exist at a time");
@@ -16,12 +18,21 @@ MIDI_Device::MIDI_Device(){
 	this->instanceCount++;
 	connected = false;
 	started = false;
+	refrence = this;
 }
 
 MIDI_Device::~MIDI_Device(){
-	this->instanceCount--;
-	connected = false;
-	started = false;
+	if (instanceCount){ //if the device 
+		if (started){
+			stop();
+		}
+		if (connected){
+			disconnect();
+		}
+		this->instanceCount--;
+		connected = false;
+		started = false;
+	}
 }
 
 int MIDI_Device::connect(){
@@ -293,4 +304,15 @@ std::vector<WCHAR*> MIDI_Device::listDevices(){
 
 const wchar_t * MIDI_Device::getName(){
 	return DeviceName;
+}
+
+MIDI_Device * MIDI_Device::getInstance(){
+	return refrence;
+}
+
+void MIDI_Device::destroyInstance(){
+	if (refrence){
+		delete refrence;
+	}
+	refrence = NULL;
 }

@@ -3,18 +3,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Action_key.h"
-#include "iDeviceDLL.h"
 
 #define DEV_NAME  L"Midi Fighter Spectra"
 
-//const wchar_t * MIDI_Fighter::DeviceName =  L"Midifighter Spectra";
+//const wchar_t * MIDI_Fighter::DeviceName =  L"Midi Fighter Spectra";
 
-const wchar_t * __stdcall getDeviceName(){
+const wchar_t * getDeviceName(){
 	return DEV_NAME;
 }
 
-MIDI_Device * __stdcall getNewDeviceHandle(){
-	return new MIDI_Fighter();
+MIDI_Device * getNewDeviceHandle(){
+	if (MIDI_Fighter::getInstance())
+		return MIDI_Fighter::getInstance();
+	return (MIDI_Device*) new MIDI_Fighter();
 }
 
 void MIDI_Fighter::loadConfig(){
