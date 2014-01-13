@@ -1,5 +1,4 @@
 #pragma once
-#include "Job.h"
 #include "WorkerThread.h"
 #include <queue>
 #include <vector>

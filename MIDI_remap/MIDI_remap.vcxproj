@@ -55,7 +55,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Threads\;$(SolutionDir)\DeviceDLL\;$(SolutionDir)\Loging\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)\Actions\;$(SolutionDir)\Threads\;$(SolutionDir)\DeviceDLL\;$(SolutionDir)\Loging\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='win8.1|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -132,6 +132,9 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Actions\Actions.vcxproj">
+      <Project>{bff98302-8fd1-46db-9c75-6e47526e43d6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\DeviceDLL\DeviceDLL.vcxproj">
       <Project>{cad0db93-7f44-4fe2-bdc9-3c96f36aa95e}</Project>
     </ProjectReference>

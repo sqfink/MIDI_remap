@@ -53,7 +53,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\Loging\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)\Actions\;$(SolutionDir)\Loging\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='win8.1|Win32'">
     <IncludePath>$(SolutionDir)\Loging\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
@@ -64,6 +64,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ShowIncludes>false</ShowIncludes>
+      <UseFullPaths>false</UseFullPaths>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,18 +108,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Action.h" />
-    <ClInclude Include="Action_key.h" />
-    <ClInclude Include="Job.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WorkerThread.h" />
     <ClInclude Include="WorkerThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Action_key.cpp" />
-    <ClCompile Include="Job.cpp" />
     <ClCompile Include="WorkerThread.cpp" />
     <ClCompile Include="WorkerThreadPool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Actions\Actions.vcxproj">
+      <Project>{bff98302-8fd1-46db-9c75-6e47526e43d6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Loging\Loging.vcxproj">
+      <Project>{c9fd31c1-77c2-4114-8880-30a805f8d933}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

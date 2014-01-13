@@ -18,21 +18,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorkerThread.h">
+    <ClInclude Include="Action_key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorkerThreadPool.h">
+    <ClInclude Include="Job.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WorkerThread.cpp">
+    <ClCompile Include="Action_key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WorkerThreadPool.cpp">
+    <ClCompile Include="Job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
