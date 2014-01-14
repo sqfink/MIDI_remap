@@ -22,12 +22,24 @@ void MIDI_Fighter::loadConfig(){
 
 }
 
+char decToHex(unsigned int dec){
+	dec = dec % 16;
+	if (dec < 10)
+		return '0' + dec;
+
+	return 'A' + (dec - 10);
+}
+
 MIDI_Fighter::MIDI_Fighter(){
 	this->DeviceName = DEV_NAME; //device name string
 	selected_bank = 0; //default to bank 0 unitl changed
 	banks[0].btn[0] = new Job();
-	banks[0].btn[0]->addAction(new Action_key('A', true));
-	banks[0].btn[0]->addAction(new Action_key('A', false));
+	for (int j = 0; j < NUM_BANKS; j++){
+		for (int i = 0; i < BTNS_PER_BANK; i++){
+			banks[j].btn[i]->addAction(new Action_key(decToHex(i), true));
+			banks[j].btn[i]->addAction(new Action_key(decToHex(i), false));
+		}
+	}
 }
 
 int MIDI_Fighter::Impl_PreprocessMIDI(UINT msg, BYTE state, BYTE firstByte, BYTE secondByte, DWORD timestamp){

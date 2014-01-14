@@ -3,9 +3,12 @@
 #include <Windows.h>
 #include "Job.h"
 
+#define BTNS_PER_BANK 16
+#define NUM_BANKS 4
+
 struct Bank{
 	UINT ID;
-	Job * btn[16];
+	Job * btn[BTNS_PER_BANK];
 };
 
 /*
