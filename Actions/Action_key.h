@@ -22,6 +22,8 @@ public:
 	*/
 	Action_key(char key, bool state);
 
+	Action_key(char*, bool);
+
 	/*
 	Creates a new key press(or release) action from a special key string
 	*/
