@@ -22,6 +22,8 @@ public:
 	*/
 	Action_key(char key, bool state);
 
+	Action_key(char*, bool);
+
 	/*
 	Frees resources
 	*/

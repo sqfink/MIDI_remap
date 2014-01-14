@@ -27,12 +27,18 @@
     <ClInclude Include="Job.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Action_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Action_key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Job.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Action_string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
