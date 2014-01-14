@@ -23,6 +23,11 @@ public:
 	Action_key(char key, bool state);
 
 	/*
+	Creates a new key press(or release) action from a special key string
+	*/
+	Action_key(const char *, bool state);
+
+	/*
 	Frees resources
 	*/
 	~Action_key();
