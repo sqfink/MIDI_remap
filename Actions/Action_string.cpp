@@ -24,6 +24,11 @@ Action_string::Action_string(const char * inputString) {
 			if (*currentIndex = '\\'){ //leave the \\ char for processing by normal parse
 				beginControlStr = NULL; //clear current control sequence start position
 				continue;	//continue with switch
+			}else if(*currentIndex = 'n'){ //allow \n as shortcut to enter key
+				ADD_ACTION(VK_RETURN);
+			}
+			else if(*currentIndex = 't'){ //allow \t as shortcut to tabs key
+				ADD_ACTION(VK_TAB);
 			}
 			else{
 				while (currentIndex < inputString + strlen(inputString) && *currentIndex != END_CONTROL_SEQ_CHAR){ //while the string still has info and the end control sequence char has not been seen

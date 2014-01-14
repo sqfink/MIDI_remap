@@ -22,10 +22,9 @@ public:
 	*/
 	Action_key(char key, bool state);
 
-	Action_key(char*, bool);
-
 	/*
 	Creates a new key press(or release) action from a special key string
+	See http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx for key codes
 	*/
 	Action_key(const char *, bool state);
 
