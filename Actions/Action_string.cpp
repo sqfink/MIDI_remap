@@ -25,10 +25,14 @@ Action_string::Action_string(const char * inputString) {
 				beginControlStr = NULL; //clear current control sequence start position
 				continue;	//continue with switch
 			}else if(*currentIndex = 'n'){ //allow \n as shortcut to enter key
-				ADD_ACTION(VK_RETURN);
+				beginControlStr = NULL; //clear current control sequence start position
+				ADD_ACTION(VK_RETURN); //send a return key press/release
+				break; //stop processing control string
 			}
 			else if(*currentIndex = 't'){ //allow \t as shortcut to tabs key
-				ADD_ACTION(VK_TAB);
+				beginControlStr = NULL; //clear current control sequence start position
+				ADD_ACTION(VK_TAB); //send a tab key press/release
+				break; //stop processingcontrol string
 			}
 			else{
 				while (currentIndex < inputString + strlen(inputString) && *currentIndex != END_CONTROL_SEQ_CHAR){ //while the string still has info and the end control sequence char has not been seen
