@@ -72,7 +72,102 @@ Action_string::Action_string(const char * inputString) {
 		case '~':
 			ADD_SHIFTED_ACTION(VK_OEM_3);
 			break;
+		case '!':
+			ADD_SHIFTED_ACTION('1');
+			break;
+		case '@':
+			ADD_SHIFTED_ACTION('2');
+			break;
+		case '#':
+			ADD_SHIFTED_ACTION('3');
+			break;
+		case '$':
+			ADD_SHIFTED_ACTION('4');
+			break;
+		case '%':
+			ADD_SHIFTED_ACTION('5');
+			break;
+		case '^':
+			ADD_SHIFTED_ACTION('6');
+			break;
+		case '&':
+			ADD_SHIFTED_ACTION('7');
+			break;
+		case '*':
+			ADD_SHIFTED_ACTION('8');
+			break;
+		case '(':
+			ADD_SHIFTED_ACTION('9');
+			break;
+		case ')':
+			ADD_SHIFTED_ACTION('0');
+			break;
+		case '-':
+			ADD_ACTION(VK_OEM_MINUS);
+			break;
+		case '_':
+			ADD_SHIFTED_ACTION(VK_OEM_MINUS);
+			break;
+		case '=':
+			ADD_ACTION(VK_OEM_PLUS);
+			break;
+		case '+':
+			ADD_SHIFTED_ACTION(VK_OEM_PLUS);
+			break;
+		case '/':
+			ADD_ACTION(VK_OEM_2);
+			break;
+		case '?':
+			ADD_SHIFTED_ACTION(VK_OEM_2);
+			break;
+		case ',':
+			ADD_ACTION(VK_OEM_COMMA);
+			break;
+		case '<':
+			ADD_SHIFTED_ACTION(VK_OEM_COMMA);
+			break;
+		case '.':
+			ADD_ACTION(VK_OEM_PERIOD);
+			break;
+		case '>':
+			ADD_SHIFTED_ACTION(VK_OEM_PERIOD);
+			break;
+		case ';':
+			ADD_ACTION(VK_OEM_1);
+			break;
+		case ':':
+			ADD_SHIFTED_ACTION(VK_OEM_1);
+			break;
+		case '\"':
+			ADD_ACTION(VK_OEM_7);
+			break;
+		case '\'':
+			ADD_SHIFTED_ACTION(VK_OEM_7);
+			break;
+		case '[':
+			ADD_ACTION(VK_OEM_4);
+			break;
+		case '{':
+			ADD_SHIFTED_ACTION(VK_OEM_4);
+			break;
+		case ']':
+			ADD_ACTION(VK_OEM_6);
+			break;
+		case '}':
+			ADD_SHIFTED_ACTION(VK_OEM_6);
+			break;
+		case '|':
+			ADD_SHIFTED_ACTION(VK_OEM_5);
+			break;
 		default:
+			if (isalnum((int)(char)*currentIndex)){ //handle standard alphanumeric
+				if (isupper((int)(char)*currentIndex)){
+					ADD_SHIFTED_ACTION(*currentIndex);
+				}else
+					ADD_ACTION(*currentIndex);
+
+				break;
+			}
 			LOG(WARN, "Action string parser", "No parse exists for %c", *currentIndex);
 			break;
 		}
