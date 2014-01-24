@@ -39,3 +39,11 @@ private:
 	bool state; //the pressed state of the key
 };
 
+/*Takes a number 0-15 and converts it to the corresponding hex char(ASCII)*/
+static char decToHex(unsigned int dec){
+	dec = dec % 16;
+	if (dec < 10)
+		return '0' + dec;
+
+	return 'A' + (dec - 10);
+}

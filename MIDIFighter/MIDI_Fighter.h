@@ -6,6 +6,8 @@
 #define BTNS_PER_BANK 16
 #define NUM_BANKS 4
 
+#define CONFIG_FILE "MIDIFighter.cfg"
+
 struct Bank{
 	UINT ID;
 	Job * btn[BTNS_PER_BANK];

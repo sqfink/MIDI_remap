@@ -97,7 +97,8 @@ WorkerThreadPool::~WorkerThreadPool(){
 
 void WorkerThreadPool::submitJob(Job* newJob){
 	if(newJob == NULL){
-		throw new std::exception("Cannot start NULL job");
+		LOG(FINE,"ThreadPool","Cannot start NULL job");
+		return;
 	}
 
 	priv->sysLock.lock(); { //lock for adding the job to the queue

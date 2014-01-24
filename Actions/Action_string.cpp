@@ -185,11 +185,17 @@ Action_string::Action_string(const char * inputString) {
 	}
 }
 
-
-Action_string::~Action_string() {
-	
+void Action_string::doAction(){ //runs all keys for the string
+	for (auto a : keys){
+		a->doAction();
+	}
 }
 
-void Action_string::doAction(){
-
+Action_string::~Action_string(){
+	for (auto a : keys){
+		if (a)
+			delete a; //frees all keys
+		a = NULL;
+	}
+	keys.clear(); //delete the list
 }
