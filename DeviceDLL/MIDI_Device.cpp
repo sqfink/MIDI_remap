@@ -36,14 +36,14 @@ MIDI_Device::~MIDI_Device(){
 }
 
 int MIDI_Device::connect(){
-	LOG(INFO,"MIDI Device","Opening connection to %ls...\t", DeviceName);
+	LOG(INFO, "MIDI Device", "Opening connection to %ls...\t", getDeviceName());
 
 	if (getDeviceCount() == 0){
 		LOG(INFO,"MIDI Device", "[FAILED]\tNo MIDI devices connected\n");
 		return ENODEV;
 	}
 	
-	int devID = getDeviceIdByName(DeviceName);
+	int devID = getDeviceIdByName(getDeviceName());
 
 	if (devID == -1){
 		LOG(INFO,"MIDI Device", "[FAILED]\tDevice not connected");
@@ -84,7 +84,7 @@ int MIDI_Device::connect(){
 }
 
 void MIDI_Device::start(){
-	LOG(INFO,"MIDI Device", "Starting MIDI processing for %ls...\t", DeviceName);
+	LOG(INFO,"MIDI Device", "Starting MIDI processing for %ls...\t", getDeviceName());
 
 	if (!connected){
 		started = false;
@@ -111,7 +111,7 @@ void MIDI_Device::start(){
 }
 
 void MIDI_Device::stop(){
-	LOG(INFO,"MIDI Device", "Stoping MIDI processing for %ls...\t", DeviceName);
+	LOG(INFO, "MIDI Device", "Stoping MIDI processing for %ls...\t", getDeviceName());
 
 	if (!connected){
 		started = false;
@@ -147,7 +147,7 @@ int MIDI_Device::disconnect(){
 		stop();
 	}
 
-	LOG(INFO,"MIDI Device", "Closing connection to %ls...\t", DeviceName);
+	LOG(INFO, "MIDI Device", "Closing connection to %ls...\t", getDeviceName());
 
 	if (!connected){
 		LOG(INFO,"MIDI Device", "[  OK  ]\n");
@@ -192,7 +192,7 @@ int MIDI_Device::getDeviceIdByName(const WCHAR * name){
 	MIDIINCAPS caps; //MIDI device capabilites structure
 
 	while (enumeratedDevices < getDeviceCount()){ //while we have not enumerated all devices
-		for (int i = lastDeviceID; i < INT_MAX; i++){ //incrementally check all device ids after the last valid one
+		for (int i = lastDeviceID; i < getDeviceCount(); i++){ //incrementally check all device ids after the last valid one
 			
 			MMRESULT retVal = midiInGetDevCaps(i, &caps, sizeof(caps)); //get the capabilities (name) of the device with this ID
 
@@ -232,7 +232,7 @@ int MIDI_Device::getDeviceIdByName(const WCHAR * name){
 
 void MIDI_Device::preprocessMIDI(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2){
 	if (dwInstance == NULL){
-		printf("Instance cannot be NULL\n");
+		LOG(ERR, "MIDI Device", "Instance cannot be NULL\n");
 		throw new std::exception("Instance cannot be NULL");
 	}
 

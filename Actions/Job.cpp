@@ -30,4 +30,5 @@ void Job::addAction(Action * a){
 	if(! a)
 		throw new std::exception("Action cannot be NULL");
 	actions.push_back(a);
+	actionCount++;
 }

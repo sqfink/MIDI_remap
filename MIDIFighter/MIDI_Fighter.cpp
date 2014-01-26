@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Action_key.h"
+#include "Action_string.h"
 #include "LogServer.h"
 
 #define DEV_NAME  L"Midi Fighter Spectra"
@@ -10,6 +11,10 @@
 //const wchar_t * MIDI_Fighter::DeviceName =  L"Midi Fighter Spectra";
 
 const wchar_t * getDeviceName(){
+	return DEV_NAME;
+}
+
+const wchar_t * MIDI_Fighter::getDeviceName(){
 	return DEV_NAME;
 }
 
@@ -27,10 +32,21 @@ void MIDI_Fighter::loadConfig(){
 	}
 	else{
 		LOG(ERR, "MIDIFighter", "Error loading MIDIFighter config file. Reverting to hex codes");
+		//HACK: test string loader
+		Job* tmp = new Job();
+		tmp->addAction(new Action_string("Hello World!\\VK_RETURN;"));
+		//HACK: end test
+
 		for (int j = 0; j < NUM_BANKS; j++){
 			for (int i = 0; i < BTNS_PER_BANK; i++){
-				banks[j].btn[i]->addAction(new Action_key(decToHex(i), true));
-				banks[j].btn[i]->addAction(new Action_key(decToHex(i), false));
+				if (i == 0){
+					banks[j].btn[i] = tmp;
+				}
+				else{
+					banks[j].btn[i] = new Job();
+					banks[j].btn[i]->addAction(new Action_key(decToHex(i), true));
+					banks[j].btn[i]->addAction(new Action_key(decToHex(i), false));
+				}
 			}
 		}
 		return;

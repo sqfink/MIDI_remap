@@ -21,15 +21,15 @@ Action_string::Action_string(const char * inputString) {
 		case BEGIN_CONTROL_SEQ_CHAR: //A control sequence has started
 			currentIndex++;
 			beginControlStr = currentIndex; //mark the begining of the control sequence string
-			if (*currentIndex = '\\'){ //leave the \\ char for processing by normal parse
+			if ((char)*currentIndex == '\\'){ //leave the \\ char for processing by normal parse
 				beginControlStr = NULL; //clear current control sequence start position
 				continue;	//continue with switch
-			}else if(*currentIndex = 'n'){ //allow \n as shortcut to enter key
+			}else if((char)*currentIndex == 'n'){ //allow \n as shortcut to enter key
 				beginControlStr = NULL; //clear current control sequence start position
 				ADD_ACTION(VK_RETURN); //send a return key press/release
 				break; //stop processing control string
 			}
-			else if(*currentIndex = 't'){ //allow \t as shortcut to tabs key
+			else if((char)*currentIndex == 't'){ //allow \t as shortcut to tabs key
 				beginControlStr = NULL; //clear current control sequence start position
 				ADD_ACTION(VK_TAB); //send a tab key press/release
 				break; //stop processingcontrol string
@@ -38,9 +38,10 @@ Action_string::Action_string(const char * inputString) {
 				while (currentIndex < inputString + strlen(inputString) && *currentIndex != END_CONTROL_SEQ_CHAR){ //while the string still has info and the end control sequence char has not been seen
 					currentIndex++; //increment current position
 				}
-				if (*currentIndex == END_CONTROL_SEQ_CHAR){ //The control sequence ended correctly
-					char * tmp = (char*)calloc(beginControlStr - currentIndex + 1, sizeof(char)); //allocate a new string the size of the control string + \0
-					memcpy(tmp, beginControlStr, beginControlStr - currentIndex); //copy the control string 
+				if ((char)*currentIndex == END_CONTROL_SEQ_CHAR){ //The control sequence ended correctly
+					int strSize = currentIndex - beginControlStr + 2;
+					char * tmp = (char*)calloc(strSize, sizeof(char)); //allocate a new string the size of the control string + \0
+					memcpy(tmp, beginControlStr, currentIndex - beginControlStr); //copy the control string 
 
 					bool wasAlreadyPressed = false; //create flag for if the key is already pressed
 					for (auto a : currentlyDepressedControlKeys){ //check if the key is already pressed
@@ -159,10 +160,19 @@ Action_string::Action_string(const char * inputString) {
 		case '|':
 			ADD_SHIFTED_ACTION(VK_OEM_5);
 			break;
+		case ' ':
+			ADD_ACTION(VK_SPACE);
+			break;
+		case '\n':
+			ADD_ACTION(VK_RETURN);
+			break;
+		case '\t':
+			ADD_ACTION(VK_TAB);
+			break;
 		default:
 			if (isalnum((int)(char)*currentIndex)){ //handle standard alphanumeric
 				if (isupper((int)(char)*currentIndex)){
-					ADD_SHIFTED_ACTION(*currentIndex);
+					ADD_SHIFTED_ACTION((char)tolower((char)*currentIndex));
 				}else
 					ADD_ACTION(*currentIndex);
 

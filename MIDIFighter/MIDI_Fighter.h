@@ -20,6 +20,7 @@ class MIDI_Fighter : public MIDI_Device {
 public:
 
 	MIDI_Fighter();
+	const wchar_t * getDeviceName();
 
 protected:
 

@@ -11,6 +11,11 @@ class MIDI_Device
 {
 public:
 	/*
+	Gets the name of the device
+	*/
+	virtual const wchar_t * getDeviceName() = 0;
+	
+	/*
 	Gets the singleton of the object
 	Returns NULL if the object has not yet been created
 	*/

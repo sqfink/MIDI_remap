@@ -10,13 +10,13 @@ Action_key::Action_key(int vk, bool state) {
 }
 
 Action_key::Action_key(char key, bool state) {
-	if ((key < 'A' || key > 'Z') && (key < '0' || key > '9')){
+	if ((key < 'a' || key > 'z') && (key < '0' || key > '9')){
 		printf("Invalid key code: %c\n", key);
 		throw new std::exception("Invalid key code");
 	}
 
-	if (key > 'A' && key < 'Z'){ //was a letter
-		vk = 0x41 + key - 'A';
+	if (key > 'a' && key < 'z'){ //was a letter
+		vk = 0x41 + key - 'a';
 	}
 	else{ //was a number
 		vk = 0x30 + key - '0';

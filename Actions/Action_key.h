@@ -45,5 +45,5 @@ static char decToHex(unsigned int dec){
 	if (dec < 10)
 		return '0' + dec;
 
-	return 'A' + (dec - 10);
+	return 'a' + (dec - 10);
 }

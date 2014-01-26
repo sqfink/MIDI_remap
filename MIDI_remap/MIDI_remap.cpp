@@ -47,7 +47,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						continue; //error connecting to device
 					}
 					dev->start(); //start listening to the device
-					LOG(INFO, "Core", "MIDI device %ls listening");
+					LOG(INFO, "Core", "MIDI device %ls listening",item);
 				}
 				else
 					LOG(ERR, "Core", "Connected MIDI device returned NULL name");
